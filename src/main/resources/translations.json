@@ -2,6 +2,16 @@
   "translation-version": "${project.version}",
   "translations": [
     {
+      "language-tag": "zh-CN",
+      "translations": {
+        "oskarsmc.message.command.message.argument.player-argument": "要发送给谁.",
+        "oskarsmc.message.command.common.argument.message-description": "要发送的消息.",
+        "oskarsmc.message.command.socialspy.on": "窃听已启用.",
+        "oskarsmc.message.command.socialspy.off": "窃听已关闭.",
+        "oskarsmc.message.command.common.self-sending-error": "你不能给自己发私聊."
+      }
+    },
+    {
       "language-tag": "en-US",
       "translations": {
         "oskarsmc.message.command.message.argument.player-argument": "The player to send the message to.",
