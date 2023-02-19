@@ -1,14 +1,11 @@
 plugins {
-    java
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    `java-library`
     `maven-publish`
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "com.oskarsmc"
 version = "1.2.0"
-if (!System.getenv("GRADLE_RELEASE").equals("true", ignoreCase = true)) {
-    version = "$version-SNAPSHOT"
-}
 
 repositories {
     mavenCentral()
@@ -34,7 +31,12 @@ tasks {
         expand("project" to project)
     }
 
+    jar {
+        archiveClassifier.set("noshade")
+    }
+
     shadowJar {
+        archiveClassifier.set("")
         dependencies {
             include {
                 it.moduleGroup == "org.bstats" || it.moduleGroup == "cloud.commandframework" || it.moduleGroup == "io.leangen.geantyref"
@@ -47,6 +49,18 @@ tasks {
 
     build {
         dependsOn(named("shadowJar"))
+    }
+
+    register("deployJar") {
+        doLast {
+            exec {
+                commandLine("rsync", shadowJar.get().archiveFile.get().asFile.absoluteFile, "dev:velocity/jar")
+            }
+        }
+    }
+    register("deployJarFresh") {
+        dependsOn(build)
+        finalizedBy(named("deployJar"))
     }
 }
 
@@ -66,17 +80,6 @@ publishing {
             version = project.version as String?
 
             from(components["java"])
-        }
-    }
-    repositories {
-        maven {
-            val releasesRepoUrl = uri("https://repository.oskarsmc.com/releases")
-            val snapshotsRepoUrl = uri("https://repository.oskarsmc.com/snapshots")
-            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_SECRET")
-            }
         }
     }
 }
