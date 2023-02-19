@@ -89,7 +89,7 @@ public final class MessageSettings {
         for (Map.Entry<String, Object> entry : handlers.entrySet()) {
             String classPath = entry.getKey().replace("\"", "");
             // classPath = classPath.replace("cloud.commandframework", "com.oskarsmc.message.relocated.cloud"); // cant do this because the string gets relocated
-            if (classPath.startsWith("loud.commandframework", 1)) { // TODO: make this less janky
+            if (classPath.startsWith("cloud.commandframework", 1)) { // TODO: make this less janky
                 classPath = "com.oskarsmc.message.relocated.cloud" + classPath.substring(22);
             }
 
